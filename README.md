@@ -18,15 +18,42 @@ Aditus is a Powershell script that has been compiled to an Portable Executable f
 You can use either of the two options:
 
 Download the latest Executable (x64)
-[Download]()
+[Download](https://github.com/NathanLouth/Aditus/releases)
 
 Download the latest Script
-[Download]()
+[Download](https://github.com/NathanLouth/Aditus/releases)
 
 ## Issues
 
+Please let me know if you encounter any bugs or issues, you can do this through the Issues tab on GitHub.
+
 ## Feature Request
+
+Please let me know any feature you think would be beneficial to add, you can do this through the Issues tab on GitHub.
 
 ## Features
 
+- Import Servers from Active Directory OUs (Requires PC being Domain Joined)
+- Import Standalone servers using DNS Name
+- Save Aditus Config (Doesnt Currently Save Server Usernames)
+- Load Aditus Config (Doesnt Currently Save Server Usernames)
+- Add Default Username used for RDP to allow easy login
+- Add Server Specific Usernames used for RDP to allow easy login
+- Start RDP Session to Server (Calls mstsc.exe)
+- Start Shadow Session to view a live RDP Session on a Server (Calls mstsc.exe)
+
 ## Getting Started
+
+### Adding Servers
+
+### Adding Credentials
+
+### Removing Credentials
+
+### Saving your config
+
+### Loading your config
+
+### Manualy editing your config
+
+### Clear your config
