@@ -42,6 +42,7 @@ Please let me know any feature you think would be beneficial to add, you can do 
 - Add Server Specific Usernames used for RDP to allow easy login
 - Start RDP Session to Server (Calls mstsc.exe)
 - Start Shadow Session to view a live RDP Session on a Server (Calls mstsc.exe)
+- Choose between control or view modes when shadowing
 
 ## Getting Started
 
