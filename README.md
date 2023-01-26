@@ -1,5 +1,5 @@
-# Aditus - Windows Server Access Tool
-Aditus provides a simple interface to RDP or Shadow any server on your network
+# Aditus
+## Aditus provides a simple interface to RDP or Shadow any server on your network
 
 ![image](https://github.com/NathanLouth/Aditus/blob/b1f0cc486f836bbe4095ebaa66e26612603876c4/Images/AditusMain.png)
 ![image](https://github.com/NathanLouth/Aditus/blob/b1f0cc486f836bbe4095ebaa66e26612603876c4/Images/AditusMenu.png)
