@@ -12,7 +12,7 @@ Aditus provides a simple interface to RDP or Shadow any server on your network
 
 Aditus is a Powershell script that has been compiled to an Portable Executable for convenience.
 
-You can run either of the two options:
+You can use either of the two options:
 
 Download the latest Executable (x64)
 [Download]()
