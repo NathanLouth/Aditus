@@ -9,7 +9,7 @@ Aditus provides a simple interface to RDP or Shadow any server on your network
 - Issues
 - Feature Request
 - Features
-- Getting Started
+- [Getting Started](https://github.com/NathanLouth/Aditus/blob/main/README.md#getting-started)
 
 ## Installation
 
