@@ -36,7 +36,7 @@ Please let me know any feature you think would be beneficial to add, you can do 
 - Import Servers from Active Directory OUs (Requires PC being Domain Joined)
 - Import Standalone servers using DNS Name
 - Save Aditus Config (Doesnt Currently Save Server Usernames)
-- Load Aditus Config (Doesnt Currently Save Server Usernames)
+- Load Aditus Config (Doesnt Currently Load Server Usernames)
 - Add Default Username used for RDP to allow easy login
 - Add Server Specific Usernames used for RDP to allow easy login
 - Start RDP Session to Server (Calls mstsc.exe)
