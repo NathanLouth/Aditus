@@ -44,6 +44,11 @@ Please let me know any feature you think would be beneficial to add, you can do 
 - Start Shadow Session to view a live RDP Session on a Server (Calls mstsc.exe)
 - Choose between control or view modes when shadowing
 
+#### Features in Development
+
+- Open program in the center of the screen
+- Allow option to keep program running once starting an RDP or Shaddow Session
+
 ## Getting Started
 
 ### Adding Servers
