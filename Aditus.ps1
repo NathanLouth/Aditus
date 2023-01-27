@@ -1,4 +1,4 @@
-﻿#Aditus 
+﻿#Aditus
 
 $ProgramVersionNumber = "1.0.0"
 $ErrorActionPreference = 'SilentlyContinue'
@@ -53,6 +53,7 @@ $form.Text = "Aditus"
 $form.Size = New-Object System.Drawing.Size(250,432)
 $form.minimumsize = New-Object System.Drawing.Size(250,432)
 $form.maximumsize = New-Object System.Drawing.Size(250,432)
+$form.ShowIcon = $false
 
 #Create a menu strip
 $menuStrip = New-Object System.Windows.Forms.MenuStrip
