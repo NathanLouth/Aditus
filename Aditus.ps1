@@ -95,6 +95,7 @@ $ImportOUMenuItem.Add_Click({
     $form.Size = New-Object System.Drawing.Size(450,300)
     $form.minimumsize = New-Object System.Drawing.Size(450,300)
     $form.maximumsize = New-Object System.Drawing.Size(450,300)
+    $form.ShowIcon = $false
 
     # Create a label to display a message
     $label = New-Object System.Windows.Forms.Label
@@ -172,6 +173,7 @@ $CredentialstMenuItem.Add_Click({
     $form.Size = New-Object System.Drawing.Size(370,200)
     $form.MinimumSize = New-Object System.Drawing.Size(370,200)
     $form.MaximumSize = New-Object System.Drawing.Size(370,200)
+    $form.ShowIcon = $false
 
     # Create the computer name label
     $computerNameLabel = New-Object System.Windows.Forms.Label
