@@ -57,9 +57,13 @@ Under "Menu" There are two options to add server:
 
 1.Add Standalone Server
 
+![image](https://github.com/NathanLouth/Aditus/blob/b1f0cc486f836bbe4095ebaa66e26612603876c4/Images/AditusStandalonePC.png)
+
 Adding a Standalone server is done by entering the servers DNS name like "FileServer001"
 
 2.Add Server from OU
+
+![image](https://github.com/NathanLouth/Aditus/blob/b1f0cc486f836bbe4095ebaa66e26612603876c4/Images/AditusOU.png)
 
 Adding servers from OUs allows Aditus dynamicaly add and remove servers from its interface when servers are added or are deleted within AD.
 
