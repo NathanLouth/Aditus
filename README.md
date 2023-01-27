@@ -1,8 +1,8 @@
 # Aditus
 ### Aditus provides a simple interface to RDP or Shadow any server on your network
 
-![image](https://github.com/NathanLouth/Aditus/blob/b1f0cc486f836bbe4095ebaa66e26612603876c4/Images/AditusMain.png)
-![image](https://github.com/NathanLouth/Aditus/blob/b1f0cc486f836bbe4095ebaa66e26612603876c4/Images/AditusMenu.png)
+![image](https://github.com/NathanLouth/Aditus/blob/main/Images/AditusMain.png)
+![image](https://github.com/NathanLouth/Aditus/blob/main/Images/AditusMenu.png)
 
 ## Overview
 - [Installation](https://github.com/NathanLouth/Aditus#installation)
@@ -57,13 +57,13 @@ Under "Menu" There are two options to add server:
 
 1.Add Standalone Server
 
-![image](https://github.com/NathanLouth/Aditus/blob/b1f0cc486f836bbe4095ebaa66e26612603876c4/Images/AditusStandalonePC.png)
+![image](https://github.com/NathanLouth/Aditus/blob/main/Images/AditusStandalonePC.png)
 
 Adding a Standalone server is done by entering the servers DNS name like "FileServer001"
 
 2.Add Server from OU
 
-![image](https://github.com/NathanLouth/Aditus/blob/b1f0cc486f836bbe4095ebaa66e26612603876c4/Images/AditusOU.png)
+![image](https://github.com/NathanLouth/Aditus/blob/main/Images/AditusOU.png)
 
 Adding servers from OUs allows Aditus dynamicaly add and remove servers from its interface when servers are added or are deleted within AD.
 
@@ -71,7 +71,17 @@ You can select multiple OUs or search to make finding OUs easier.
 
 ### Adding Credentials
 
-Aditus allows you to save usernames when starting a remote desktop connection
+![image](https://github.com/NathanLouth/Aditus/blob/main/Images/AditusAddCred.png)
+
+Aditus allows you to save usernames when starting a remote desktop connection.
+
+You can set a default username or select individual usernames for servers.
+
+*Usernames are stored in the current users registry in the following key:*
+
+*HKCU:\Software\Microsoft\Terminal Server Client\Servers*
+
+*mstsc.exe checks this location to see if a "UsernameHint" is set for a given server*
 
 ### Removing Credentials
 
