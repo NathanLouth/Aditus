@@ -33,13 +33,13 @@ Function RefreshServerItemsList(){
             Name = $StandAloneServerTXT
         }
         if($Servers -eq $null){
-            $Servers  = $StandAloneOBJ
+            $Servers = @($StandAloneOBJ)
         }else{
             $Servers += $StandAloneOBJ
         }
     }
 
-    $Servers = $Servers | sort | Get-Unique | Where-Object {$_.Name} | sort Name
+    $Servers = $Servers | Where-Object {$_.Name} | sort -Unique Name
 
     $serverListBox.DataSource = $Servers.name
     $serverListBox.DisplayMember = "Name"
@@ -354,7 +354,7 @@ $fileMenuItem.DropDownItems.Add($aboutMenuItem)
 
 #Add an event handler to the About menu item's Click event
 $aboutMenuItem.Add_Click({
-[System.Windows.Forms.MessageBox]::Show("Aditus Version $ProgramVersionNumber Created by Your Nathan Louth`nCopyright (c) 2023 All rights reserved.", "About Aditus", "OK", "Information")
+[System.Windows.Forms.MessageBox]::Show("Aditus Version $ProgramVersionNumber Created by Nathan Louth`nAditus is Licensed under the GPL-2.0 License", "About Aditus", "OK", "Information")
 })
 
 # Get Domain Servers and add to selection list
@@ -374,13 +374,13 @@ foreach($StandAloneServerTXT in Get-Content $ConfigPath\StandAlone.Conf){
         Name = $StandAloneServerTXT
     }
     if($Servers -eq $null){
-        $Servers  = $StandAloneOBJ
+        $Servers = @($StandAloneOBJ)
     }else{
         $Servers += $StandAloneOBJ
     }
 }
 
-$Servers = $Servers | sort | Get-Unique | Where-Object {$_.Name} | sort Name
+$Servers = $Servers | Where-Object {$_.Name} | sort -Unique Name
 
 # Create a search box
 $searchBox = New-Object System.Windows.Forms.TextBox
