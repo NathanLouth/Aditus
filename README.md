@@ -47,7 +47,7 @@ Please let me know any feature you think would be beneficial to add, you can do 
 #### Features in Development
 
 - Open program in the center of the screen
-- Allow option to keep program running once starting an RDP or Shaddow Session
+- Allow option to keep program running once starting RDP or Shaddow Session
 
 ## Getting Started
 
