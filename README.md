@@ -53,7 +53,21 @@ Please let me know any feature you think would be beneficial to add, you can do 
 
 ### Adding Servers
 
+Under "Menu" There are two options to add server:
+
+1.Add Standalone Server
+
+Adding a Standalone server is done by entering the servers DNS name like "FileServer001"
+
+2.Add Server from OU
+
+Adding servers from OUs allows Aditus dynamicaly add and remove servers from its interface when servers are added or are deleted within AD.
+
+You can select multiple OUs or search to make finding OUs easier.
+
 ### Adding Credentials
+
+Aditus allows you to save usernames when starting a remote desktop connection
 
 ### Removing Credentials
 
