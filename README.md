@@ -1,4 +1,4 @@
-# Aditus
+# Aditus - The gateway to your internal network
 ### Aditus provides a simple interface to RDP or Shadow any server on your network
 
 ![image](https://github.com/NathanLouth/Aditus/blob/main/Images/AditusMain.png)
