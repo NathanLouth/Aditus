@@ -27,7 +27,7 @@ Download the latest Script
 
 Please let me know if you encounter any bugs or issues, you can do this through the Issues tab on GitHub.
 
-### Known Issues
+#### Known Issues
 
 - If only one server is in the list it won't show - working on a fix
 
