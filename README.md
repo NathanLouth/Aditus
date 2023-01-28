@@ -116,4 +116,4 @@ Aditus saves settings in .conf files these are human readable and you can edit t
 
 Use this option when you want to start a fresh or start making a new config to save.
 
-* This won't delete stored RDP Credentials *
+*This won't delete stored RDP Credentials*
