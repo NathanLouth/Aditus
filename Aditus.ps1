@@ -1,6 +1,6 @@
 ﻿#Aditus
 
-$ProgramVersionNumber = "1.0.0"
+$ProgramVersionNumber = "1.0.1"
 $ErrorActionPreference = 'SilentlyContinue'
 
 # Import the System.Windows.Forms assembly
@@ -54,6 +54,7 @@ $form.Size = New-Object System.Drawing.Size(250,432)
 $form.minimumsize = New-Object System.Drawing.Size(250,432)
 $form.maximumsize = New-Object System.Drawing.Size(250,432)
 $form.ShowIcon = $false
+$form.StartPosition = "CenterScreen"
 
 #Create a menu strip
 $menuStrip = New-Object System.Windows.Forms.MenuStrip
