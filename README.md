@@ -113,3 +113,7 @@ You can load Aditus configs using this option
 Aditus saves settings in .conf files these are human readable and you can edit these yourself
 
 ### Clear your config
+
+Use this option when you want to start a fresh or start making a new config to save.
+
+* This won't delete stored RDP Credentials *
