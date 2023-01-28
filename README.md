@@ -85,10 +85,31 @@ You can set a default username or select individual usernames for servers.
 
 ### Removing Credentials
 
+Aditus allows you to clear any saved rdp credentials this removes all keys in:
+
+*HKCU:\Software\Microsoft\Terminal Server Client\Servers*
+
+*mstsc.exe checks this location to see if a "UsernameHint" is set for a given server*
+
 ### Saving your config
+
+![image](https://github.com/NathanLouth/Aditus/blob/main/Images/AditusConfigName.png)
+![image](https://github.com/NathanLouth/Aditus/blob/main/Images/AditusSelectFolderSave.png)
+
+Aditus auto saves your config to a folder called Aditus in your HomeDrive or to Aditus in the C drive on a non domain joined computer (this folder is hidden by default).
+
+Saving your config allows you to load it on differnet computers in create a backup of the config.
+
+The saved config is a folder containing differnet .conf files
 
 ### Loading your config
 
+![image](https://github.com/NathanLouth/Aditus/blob/main/Images/AditusLoadConfig.png)
+
+You can load Aditus configs using this option
+
 ### Manualy editing your config
+
+Aditus saves settings in .conf files these are human readable and you can edit these yourself
 
 ### Clear your config
