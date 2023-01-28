@@ -110,6 +110,8 @@ You can load Aditus configs using this option
 
 ### Manualy editing your config
 
+![image](https://github.com/NathanLouth/Aditus/blob/main/Images/AditusConfigFiles.png)
+
 Aditus saves settings in .conf files these are human readable and you can edit these yourself
 
 ### Clear your config
