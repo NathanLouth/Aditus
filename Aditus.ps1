@@ -1,6 +1,6 @@
 ﻿#Aditus
 
-$ProgramVersionNumber = "1.0.2"
+$ProgramVersionNumber = "1.0.3"
 $ErrorActionPreference = 'SilentlyContinue'
 
 # Import the System.Windows.Forms assembly
@@ -82,7 +82,7 @@ $importMenuItem.Add_Click({
 
 #Create an Import menu item
 $ImportOUMenuItem = New-Object System.Windows.Forms.ToolStripMenuItem
-$ImportOUMenuItem.Text = "Add Server From OU"
+$ImportOUMenuItem.Text = "Add Servers From OU"
 $fileMenuItem.DropDownItems.Add($ImportOUMenuItem)
 
 #Add an event handler to the Import menu item's Click event
@@ -377,6 +377,27 @@ $RemoveConfigMenuItem.Add_Click({
     RefreshServerItemsList
 })
 
+#Create an General Settings menu item
+$CloseOrRunsMenuItem = New-Object System.Windows.Forms.ToolStripMenuItem
+if(Test-Path $ConfigPath\CloseOnConnection.Conf){
+    $CloseOrRunsMenuItem.Text = "Keep running on connection"
+}else{
+    $CloseOrRunsMenuItem.Text = "Close on connection"
+}
+$fileMenuItem.DropDownItems.Add($CloseOrRunsMenuItem)
+
+#Add General Settings Event Handler
+$CloseOrRunsMenuItem.Add_Click({
+    if(Test-Path $ConfigPath\CloseOnConnection.Conf){
+        Remove-Item $ConfigPath\CloseOnConnection.Conf -Force
+        $CloseOrRunsMenuItem.Text = "Close on connection"
+    }else{
+        New-Item -Path $ConfigPath\CloseOnConnection.Conf -Force
+        $CloseOrRunsMenuItem.Text = "Keep running on connection"
+    }
+
+})
+
 #Create an About menu item
 $aboutMenuItem = New-Object System.Windows.Forms.ToolStripMenuItem
 $aboutMenuItem.Text = "About"
@@ -453,7 +474,9 @@ $rdpButton.Add_Click({
     #Run Remote desktop in admin mode (mainly for Gateway servers)
     & mstsc.exe /V:$ConnectServer /admin
 
-    $form.Close()
+    if(Test-Path $ConfigPath\CloseOnConnection.Conf){
+        $form.Close()
+    }
 
 })
 
@@ -468,14 +491,17 @@ $connectButton.Add_Click({
 
     $UQuery = (query user /server:$ConnectServer) -split "\n" -replace '\s\s+', ';' | convertfrom-csv -Delimiter ';' | where {$_.STATE -eq "Active"}
 
-if ($UQuery){
+if ($true){
     $Global:UID = $UQuery[0].id
     
-    $connectButton.Text = "View";
-    $connectButton.Location = New-Object System.Drawing.Point(135,330);
-    $form.Controls.Add($connectButton);
-
     $rdpbutton.visible = $fasle
+    $connectButton.Visible = $fasle
+
+    $ViewshButton = New-Object System.Windows.Forms.Button;
+    $ViewshButton.Text = "View";
+    $controlButton.AutoSize = $true;
+    $ViewshButton.Location = New-Object System.Drawing.Point(135,330);
+    $form.Controls.Add($ViewshButton);
     
     $controlButton = New-Object System.Windows.Forms.Button;
     $controlButton.Text = "Control";
@@ -483,16 +509,27 @@ if ($UQuery){
     $controlButton.Location = New-Object System.Drawing.Point(55,330);
     $form.Controls.Add($controlButton);
     
-    $connectButton.Add_Click({
-        write-host $ConnectServer
+    $ViewshButton.Add_Click({
         mstsc /v:$ConnectServer /shadow:$UID
-        $form.Close()
+        $ViewshButton.Visible = $fasle
+        $connectButton.Visible = $fasle
+        $rdpbutton.visible = $true
+        $connectButton.Visible = $true
+        if(Test-Path $ConfigPath\CloseOnConnection.Conf){
+            $form.Close()
+        }
 
     });
     
     $controlButton.Add_Click({
         mstsc /v:$ConnectServer /shadow:$UID /Control
-        $form.Close()
+        $ViewshButton.Visible = $fasle
+        $connectButton.Visible = $fasle
+        $rdpbutton.visible = $true
+        $connectButton.Visible = $true     
+        if(Test-Path $ConfigPath\CloseOnConnection.Conf){
+            $form.Close()
+        }
 
     });
 } else {
