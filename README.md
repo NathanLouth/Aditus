@@ -51,8 +51,8 @@ Please let me know any feature you think would be beneficial to add, you can do 
 #### Features in Development
 
 - Open program in the center of the screen - 1.0.1
-- Add option to keep program running once starting RDP or Shaddow Session - 1.0.2
-- Add option to use computer name for domain when adding credentials to make bulk adding easier
+- Add option to keep program running once starting RDP or Shaddow Session 
+- Add option to use computer name for domain when adding credentials to make bulk adding easier - 1.0.2
 
 ## Getting Started
 
