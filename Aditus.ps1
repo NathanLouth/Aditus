@@ -1,6 +1,6 @@
 ﻿#Aditus
 
-$ProgramVersionNumber = "1.0.1"
+$ProgramVersionNumber = "1.0.2"
 $ErrorActionPreference = 'SilentlyContinue'
 
 # Import the System.Windows.Forms assembly
@@ -218,6 +218,21 @@ $CredentialstMenuItem.Add_Click({
         }
     })
 
+    # Create the Domain TickBox 
+    $LDomainTickbox = New-Object System.Windows.Forms.CheckBox
+    $LDomainTickbox.Text = "Use computer name as domain"
+    $LDomainTickbox.Location = New-Object System.Drawing.Size(15,90)
+    $LDomainTickbox.Size = New-Object System.Drawing.Size(200,20)
+
+    # Create event for TickBox
+    $LDomainTickbox.Add_Click({
+        if($LDomainTickbox.Checked){
+            $usernameTextBox.Text = $env:USERNAME
+        }else{
+            $usernameTextBox.Text = $env:USERDOMAIN + "\" + $env:USERNAME
+        }
+    })
+
     # Create the OK button
     $okButton = New-Object System.Windows.Forms.Button
     $okButton.Text = "OK"
@@ -238,6 +253,7 @@ $CredentialstMenuItem.Add_Click({
     $form.Controls.Add($defaultTickbox)
     $form.Controls.Add($okButton)
     $form.Controls.Add($cancelButton)
+    $form.Controls.Add($LDomainTickbox)
 
     #Show the form
     $result = $form.ShowDialog()
@@ -248,20 +264,30 @@ $CredentialstMenuItem.Add_Click({
         if($defaultTickbox.Checked){
             $FULLSERVERLIST = $serverListBox.DataSource
             foreach($FULLSERVER in $FULLSERVERLIST){
+                if($LDomainTickbox.Checked){
+                    $LocalUsername = $FULLSERVER + "\" + $usernameTextBox.Text
+                }else{
+                    $LocalUsername = $usernameTextBox.Text
+                }
                 $FULLREGPATH = "HKCU:\Software\Microsoft\Terminal Server Client\Servers\" + $FULLSERVER
                 if(!(Test-Path $FULLREGPATH)){
                     New-Item "HKCU:\Software\Microsoft\Terminal Server Client\Servers" -Name $FULLSERVER
-                    New-ItemProperty -Path $FULLREGPATH -Name UsernameHint -PropertyType String -Value $usernameTextBox.Text
+                    New-ItemProperty -Path $FULLREGPATH -Name UsernameHint -PropertyType String -Value $LocalUsername
                 }
             }
         }else{
             $FULLREGPATH = "HKCU:\Software\Microsoft\Terminal Server Client\Servers\" + $computerNameTextBox.text
+            if($LDomainTickbox.Checked){
+                $LocalUsername = $FULLSERVER + "\" + $usernameTextBox.Text
+            }else{
+                $LocalUsername = $usernameTextBox.Text
+            }
             if(!(Test-Path $FULLREGPATH)){
                 New-Item "HKCU:\Software\Microsoft\Terminal Server Client\Servers" -Name $computerNameTextBox.text
-                New-ItemProperty -Path $FULLREGPATH -Name UsernameHint -PropertyType String -Value $usernameTextBox.Text
+                New-ItemProperty -Path $FULLREGPATH -Name UsernameHint -PropertyType String -Value $LocalUsername
             }else{
                 $TEMPCOMPUTERNAMEKEY = $computerNameTextBox.text
-                Set-ItemProperty -Path "HKCU:\Software\Microsoft\Terminal Server Client\Servers\$TEMPCOMPUTERNAMEKEY" -Name UsernameHint -Value $usernameTextBox.Text -Force
+                Set-ItemProperty -Path "HKCU:\Software\Microsoft\Terminal Server Client\Servers\$TEMPCOMPUTERNAMEKEY" -Name UsernameHint -Value $LocalUsername -Force
             }
         }
 
