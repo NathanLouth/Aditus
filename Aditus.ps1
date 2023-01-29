@@ -1,7 +1,7 @@
 ﻿#Aditus
 
-$ProgramVersionNumber = "1.0.3"
-$ErrorActionPreference = 'SilentlyContinue'
+$ProgramVersionNumber = "1.1.1"
+#$ErrorActionPreference = 'SilentlyContinue'
 
 # Import the System.Windows.Forms assembly
 Add-Type -AssemblyName System.Windows.Forms
@@ -50,11 +50,27 @@ $form = New-Object System.Windows.Forms.Form
 
 # Set the form's properties
 $form.Text = "Aditus"
-$form.Size = New-Object System.Drawing.Size(250,432)
-$form.minimumsize = New-Object System.Drawing.Size(250,432)
-$form.maximumsize = New-Object System.Drawing.Size(250,432)
+$form.Size = New-Object System.Drawing.Size(550,432)
+$form.minimumsize = New-Object System.Drawing.Size(550,432)
+$form.maximumsize = New-Object System.Drawing.Size(550,432)
 $form.ShowIcon = $false
 $form.StartPosition = "CenterScreen"
+
+#Create system info text
+# Create TextBox and set text, size and location
+$textServerName = New-Object Windows.Forms.TextBox
+$textServerName.Location = New-Object Drawing.Point 250,30
+$textServerName.Size = New-Object Drawing.Point 250,30
+$textServerName.ReadOnly = $true
+$form.Controls.Add($textServerName)
+
+# Create TextBox and set text, size and location
+$textServerStorage = New-Object Windows.Forms.TextBox
+$textServerStorage.Location = New-Object Drawing.Point 250,65
+$textServerStorage.Size = New-Object Drawing.Point 250,90
+$textServerStorage.ReadOnly = $true
+$textServerStorage.Multiline = $true
+$form.Controls.Add($textServerStorage)
 
 #Create a menu strip
 $menuStrip = New-Object System.Windows.Forms.MenuStrip
@@ -452,7 +468,6 @@ $searchBox.Add_TextChanged({
     $serverListBox.DisplayMember = "Name"
 })
 
-
 # Create a list box to display the servers
 $serverListBox = New-Object System.Windows.Forms.ListBox
 $serverListBox.Location = New-Object System.Drawing.Point(15,30)
@@ -461,6 +476,33 @@ $serverListBox.Font = New-Object System.Drawing.Font("Lucida Console",14,[System
 $serverListBox.DataSource = $Servers.name
 $serverListBox.DisplayMember = "Name"
 $form.Controls.Add($serverListBox)
+
+$textServerName.Text = $serverListBox.SelectedValue
+
+$serverListBox.Add_Click({
+    $textServerName.Text = $serverListBox.SelectedValue
+    $textServerStorage.Text = "Storage: `r`n"
+    $textServerStorage.Text += "Drive,    Drive Size,    Free Space `r`n"
+    $containsWord = get-content $ConfigPath\NoRPCServer.conf | %{$_ -match $serverListBox.SelectedValue}
+    if(!($containsWord -contains $true)){
+        foreach($wmidrive in (get-WmiObject win32_logicaldisk -Computername $serverListBox.SelectedValue -ErrorVariable wmidriveerror)){
+            $textServerStorage.Text += (get-WmiObject win32_logicaldisk -Computername $serverListBox.SelectedValue).DeviceID
+            $textServerStorage.Text += "         "
+            $textServerStorage.Text += [Math]::Round((get-WmiObject win32_logicaldisk -Computername $serverListBox.SelectedValue).Size  / 1000000000)
+            $textServerStorage.Text += "GB"
+            $textServerStorage.Text += "          "
+            $textServerStorage.Text += [Math]::Round((get-WmiObject win32_logicaldisk -Computername $serverListBox.SelectedValue).FreeSpace  / 1000000000)
+            $textServerStorage.Text += "GB"
+            $textServerStorage.Text += "`r`n"
+        }
+        if($wmidriveerror){
+            $RPCRESP = [System.Windows.Forms.MessageBox]::Show("Do you want to remember you can't connect to the RPC server?","RPC Server", "YesNo" , "Information" , "Button1")
+            if($RPCRESP -eq "yes"){
+                $serverListBox.SelectedValue | Out-File $ConfigPath\NoRPCServer.conf -Append -Force
+            }
+        }
+    }
+})
 
 # Create a button to RDP to the selected server
 $rdpButton = New-Object System.Windows.Forms.Button
