@@ -1,7 +1,7 @@
 ﻿#Aditus
 
-$ProgramVersionNumber = "1.1.1"
-#$ErrorActionPreference = 'SilentlyContinue'
+$ProgramVersionNumber = "1.2.0"
+$ErrorActionPreference = 'SilentlyContinue'
 
 # Import the System.Windows.Forms assembly
 Add-Type -AssemblyName System.Windows.Forms
@@ -65,12 +65,27 @@ $textServerName.ReadOnly = $true
 $form.Controls.Add($textServerName)
 
 # Create TextBox and set text, size and location
+$textServerIP = New-Object Windows.Forms.TextBox
+$textServerIP.Location = New-Object Drawing.Point 250,65
+$textServerIP.Size = New-Object Drawing.Point 250,30
+$textServerIP.ReadOnly = $true
+$form.Controls.Add($textServerIP)
+
+# Create TextBox and set text, size and location
 $textServerStorage = New-Object Windows.Forms.TextBox
-$textServerStorage.Location = New-Object Drawing.Point 250,65
-$textServerStorage.Size = New-Object Drawing.Point 250,90
+$textServerStorage.Location = New-Object Drawing.Point 250,105
+$textServerStorage.Size = New-Object Drawing.Point 250,125
 $textServerStorage.ReadOnly = $true
 $textServerStorage.Multiline = $true
 $form.Controls.Add($textServerStorage)
+
+# Create TextBox and set text, size and location
+$textServerShares = New-Object Windows.Forms.TextBox
+$textServerShares.Location = New-Object Drawing.Point 250,250
+$textServerShares.Size = New-Object Drawing.Point 250,125
+$textServerShares.ReadOnly = $true
+$textServerShares.multiline = $true
+$form.Controls.Add($textServerShares)
 
 #Create a menu strip
 $menuStrip = New-Object System.Windows.Forms.MenuStrip
@@ -477,38 +492,86 @@ $serverListBox.DataSource = $Servers.name
 $serverListBox.DisplayMember = "Name"
 $form.Controls.Add($serverListBox)
 
-$textServerName.Text = $serverListBox.SelectedValue
+$ServerStorageJob
 
 $serverListBox.Add_Click({
-    $textServerName.Text = $serverListBox.SelectedValue
-    $textServerStorage.Text = "Storage: `r`n"
-    $textServerStorage.Text += "Drive,    Drive Size,    Free Space `r`n"
-    $containsWord = get-content $ConfigPath\NoRPCServer.conf | %{$_ -match $serverListBox.SelectedValue}
-    if(!($containsWord -contains $true)){
-        foreach($wmidrive in (get-WmiObject win32_logicaldisk -Computername $serverListBox.SelectedValue -ErrorVariable wmidriveerror)){
-            $textServerStorage.Text += (get-WmiObject win32_logicaldisk -Computername $serverListBox.SelectedValue).DeviceID
-            $textServerStorage.Text += "         "
-            $textServerStorage.Text += [Math]::Round((get-WmiObject win32_logicaldisk -Computername $serverListBox.SelectedValue).Size  / 1000000000)
-            $textServerStorage.Text += "GB"
-            $textServerStorage.Text += "          "
-            $textServerStorage.Text += [Math]::Round((get-WmiObject win32_logicaldisk -Computername $serverListBox.SelectedValue).FreeSpace  / 1000000000)
-            $textServerStorage.Text += "GB"
-            $textServerStorage.Text += "`r`n"
+
+    $global:ServerIPJob = Start-Job -ArgumentList $serverListBox.SelectedValue -Name ServerIP -ScriptBlock  {
+        param($servertmpval)
+        $textServerIPTMP = (Resolve-DnsName -Name $servertmpval | where{$_.Type -eq "A"}).IPAddress
+        return $textServerIPTMP
+    }
+
+    $global:ServerStorageJob = Start-Job -ArgumentList $serverListBox.SelectedValue -Name ServerStorage -ScriptBlock  {
+    param($servertmpval)
+    $textServerStorageTMP = "Drive,    Drive Size,    Free Space `r`n"
+        foreach($wmidrive in (get-WmiObject win32_logicaldisk -Computername $servertmpval -ErrorVariable wmidriveerror)){
+            $textServerStorageTMP += ($wmidrive).DeviceID
+            $textServerStorageTMP += "         "
+            $textServerStorageTMP += [Math]::Round(($wmidrive).Size  / 1000000000)
+            $textServerStorageTMP += "GB"
+            $textServerStorageTMP += "          "
+            $textServerStorageTMP += [Math]::Round(($wmidrive).FreeSpace  / 1000000000)
+            $textServerStorageTMP += "GB"
+            $textServerStorageTMP += "`r`n"
         }
-        if($wmidriveerror){
-            $RPCRESP = [System.Windows.Forms.MessageBox]::Show("Do you want to remember you can't connect to the RPC server?","RPC Server", "YesNo" , "Information" , "Button1")
-            if($RPCRESP -eq "yes"){
-                $serverListBox.SelectedValue | Out-File $ConfigPath\NoRPCServer.conf -Append -Force
-            }
+        return $textServerStorageTMP
+    }
+
+    $global:ServerSharesJob = Start-Job -ArgumentList $serverListBox.SelectedValue -Name ServerShares -ScriptBlock  {
+        param($servertmpval)
+        $textServerSharesTMP = "Share Names: `r`n"
+        foreach($Lshare in get-WmiObject -class Win32_Share -computer $servertmpval){
+            $textServerSharesTMP += ($Lshare).Name
+            #$textServerSharesTMP += "      "
+            #$textServerSharesTMP += ($Lshare).Path
+            $textServerSharesTMP += "`r`n"
         }
+        return $textServerSharesTMP
+    }
+
+    $textServerName.text = "Computer Name: " + $serverListBox.SelectedValue
+    $textServerStorage.Text = "Loading..."
+    $textServerIP.Text = "Loading..."
+    $textServerShares.Text = "Loading..."
+
+})
+
+$timer = New-Object System.Windows.Forms.Timer
+$timer.Interval = 1000
+$timer.add_tick({
+    if($ServerStorageJob.State -eq 'Completed')
+    {
+        $jobInfo = Receive-Job $ServerStorageJob
+        Remove-job "ServerStorage"
+        $textServerStorage.text = $JobInfo
+        $Global:ServerStorageJob = ""
+             
+    }
+    if($ServerIPJob.State -eq 'Completed')
+    {
+        $jobInfo = Receive-Job $ServerIPJob
+        Remove-job "ServerIP"
+        $textServerIP.text = "IP Address: " + $JobInfo
+        $Global:ServerIPJob = ""
+             
+    }
+    if($ServerSharesJob.State -eq 'Completed')
+    {
+        $jobInfo = Receive-Job $ServerSharesJob
+        Remove-job "ServerShares"
+        $textServerShares.text = $JobInfo
+        $Global:ServerSharesJob = ""
+             
     }
 })
+$timer.start()
 
 # Create a button to RDP to the selected server
 $rdpButton = New-Object System.Windows.Forms.Button
 $rdpButton.Text = "RDP"
 $rdpButton.AutoSize = $true
-$rdpButton.Location = New-Object System.Drawing.Point(55,330)
+$rdpButton.Location = New-Object System.Drawing.Point(25,328)
 $rdpButton.Add_Click({
 
     $Global:ConnectServer = ($serverListBox.SelectedItem).ToString()
@@ -526,7 +589,7 @@ $rdpButton.Add_Click({
 $connectButton = New-Object System.Windows.Forms.Button
 $connectButton.Text = "Shadow"
 $connectButton.AutoSize = $true
-$connectButton.Location = New-Object System.Drawing.Point(135,330)
+$connectButton.Location = New-Object System.Drawing.Point(135,328)
 $connectButton.Add_Click({
     
     $Global:ConnectServer = ($serverListBox.SelectedItem).ToString()
