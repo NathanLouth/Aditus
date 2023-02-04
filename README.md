@@ -51,6 +51,10 @@ Please let me know any feature you think would be beneficial to add, you can do 
 - Choose between control or view modes when shadowing
 - Choose the option to keep program running or to close once starting RDP or Shadow Session
 - Option to use computer name for domain when adding credentials to make bulk adding easier
+- Advanced View:
+  * View computer's IP Address
+  * View computer's storage/drive space
+  * View computer's shares
 
 ## Getting Started
 
