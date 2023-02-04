@@ -1,6 +1,6 @@
 #Aditus
 
-$ProgramVersionNumber = "2.0.0"
+$ProgramVersionNumber = "2.0.1"
 $ErrorActionPreference = 'SilentlyContinue'
 
 # Import the System.Windows.Forms assembly
@@ -635,7 +635,7 @@ if ($true){
 
     $ViewshButton = New-Object System.Windows.Forms.Button;
     $ViewshButton.Text = "View";
-    $controlButton.AutoSize = $true;
+    $ViewshButton.AutoSize = $true;
     $ViewshButton.Location = New-Object System.Drawing.Point(135,330);
     $form.Controls.Add($ViewshButton);
     
