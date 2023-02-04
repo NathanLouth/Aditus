@@ -1,6 +1,6 @@
 #Aditus
 
-$ProgramVersionNumber = "1.2.0"
+$ProgramVersionNumber = "2.0.0"
 $ErrorActionPreference = 'SilentlyContinue'
 
 # Import the System.Windows.Forms assembly
