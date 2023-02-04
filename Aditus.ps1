@@ -1,4 +1,4 @@
-﻿#Aditus
+#Aditus
 
 $ProgramVersionNumber = "1.2.0"
 $ErrorActionPreference = 'SilentlyContinue'
@@ -50,9 +50,15 @@ $form = New-Object System.Windows.Forms.Form
 
 # Set the form's properties
 $form.Text = "Aditus"
-$form.Size = New-Object System.Drawing.Size(550,432)
-$form.minimumsize = New-Object System.Drawing.Size(550,432)
-$form.maximumsize = New-Object System.Drawing.Size(550,432)
+if(Test-Path $ConfigPath\ClassicView.Conf){
+    $form.Size = New-Object System.Drawing.Size(252,432)
+    $form.minimumsize = New-Object System.Drawing.Size(252,432)
+    $form.maximumsize = New-Object System.Drawing.Size(252,432)
+}else{
+    $form.Size = New-Object System.Drawing.Size(550,432)
+    $form.minimumsize = New-Object System.Drawing.Size(550,432)
+    $form.maximumsize = New-Object System.Drawing.Size(550,432)
+}
 $form.ShowIcon = $false
 $form.StartPosition = "CenterScreen"
 
@@ -95,6 +101,31 @@ $form.Controls.Add($menuStrip)
 $fileMenuItem = New-Object System.Windows.Forms.ToolStripMenuItem
 $fileMenuItem.Text = "Menu"
 $menuStrip.Items.Add($fileMenuItem)
+
+#Create a menu item
+$ViewMenuItem = New-Object System.Windows.Forms.ToolStripMenuItem
+$ViewMenuItem.Text = "View"
+$menuStrip.Items.Add($ViewMenuItem)
+
+#Create an Import menu item
+$ViewCMenuItem = New-Object System.Windows.Forms.ToolStripMenuItem
+$ViewCMenuItem.Text = "Change View"
+$ViewMenuItem.DropDownItems.Add($ViewCMenuItem)
+
+#Add an event handler to the Import menu item's Click event
+$ViewCMenuItem.Add_Click({
+    if(Test-Path C:\Aditus\ClassicView.Conf){
+    $form.Size = New-Object System.Drawing.Size(550,432)
+    $form.minimumsize = New-Object System.Drawing.Size(550,432)
+    $form.maximumsize = New-Object System.Drawing.Size(550,432)
+    Remove-Item -Path $ConfigPath\ClassicView.Conf
+    }else{
+    $form.Size = New-Object System.Drawing.Size(252,432)
+    $form.minimumsize = New-Object System.Drawing.Size(252,432)
+    $form.maximumsize = New-Object System.Drawing.Size(252,432)   
+    New-Item -ItemType File -Path $ConfigPath\ClassicView.Conf
+    }
+})
 
 #Create an Import menu item
 $importMenuItem = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -495,46 +526,46 @@ $form.Controls.Add($serverListBox)
 $ServerStorageJob
 
 $serverListBox.Add_Click({
-
-    $global:ServerIPJob = Start-Job -ArgumentList $serverListBox.SelectedValue -Name ServerIP -ScriptBlock  {
-        param($servertmpval)
-        $textServerIPTMP = (Resolve-DnsName -Name $servertmpval | where{$_.Type -eq "A"}).IPAddress
-        return $textServerIPTMP
-    }
-
-    $global:ServerStorageJob = Start-Job -ArgumentList $serverListBox.SelectedValue -Name ServerStorage -ScriptBlock  {
-    param($servertmpval)
-    $textServerStorageTMP = "Drive,    Drive Size,    Free Space `r`n"
-        foreach($wmidrive in (get-WmiObject win32_logicaldisk -Computername $servertmpval -ErrorVariable wmidriveerror)){
-            $textServerStorageTMP += ($wmidrive).DeviceID
-            $textServerStorageTMP += "         "
-            $textServerStorageTMP += [Math]::Round(($wmidrive).Size  / 1000000000)
-            $textServerStorageTMP += "GB"
-            $textServerStorageTMP += "          "
-            $textServerStorageTMP += [Math]::Round(($wmidrive).FreeSpace  / 1000000000)
-            $textServerStorageTMP += "GB"
-            $textServerStorageTMP += "`r`n"
+    if(!(Test-Path $ConfigPath\ClassicView.Conf)){
+        $global:ServerIPJob = Start-Job -ArgumentList $serverListBox.SelectedValue -Name ServerIP -ScriptBlock  {
+            param($servertmpval)
+            $textServerIPTMP = (Resolve-DnsName -Name $servertmpval | where{$_.Type -eq "A"}).IPAddress
+            return $textServerIPTMP
         }
-        return $textServerStorageTMP
-    }
 
-    $global:ServerSharesJob = Start-Job -ArgumentList $serverListBox.SelectedValue -Name ServerShares -ScriptBlock  {
+        $global:ServerStorageJob = Start-Job -ArgumentList $serverListBox.SelectedValue -Name ServerStorage -ScriptBlock  {
         param($servertmpval)
-        $textServerSharesTMP = "Share Names: `r`n"
-        foreach($Lshare in get-WmiObject -class Win32_Share -computer $servertmpval){
-            $textServerSharesTMP += ($Lshare).Name
-            #$textServerSharesTMP += "      "
-            #$textServerSharesTMP += ($Lshare).Path
-            $textServerSharesTMP += "`r`n"
+        $textServerStorageTMP = "Drive,    Drive Size,    Free Space `r`n"
+            foreach($wmidrive in (get-WmiObject win32_logicaldisk -Computername $servertmpval -ErrorVariable wmidriveerror)){
+                $textServerStorageTMP += ($wmidrive).DeviceID
+                $textServerStorageTMP += "         "
+                $textServerStorageTMP += [Math]::Round(($wmidrive).Size  / 1000000000)
+                $textServerStorageTMP += "GB"
+                $textServerStorageTMP += "          "
+                $textServerStorageTMP += [Math]::Round(($wmidrive).FreeSpace  / 1000000000)
+                $textServerStorageTMP += "GB"
+                $textServerStorageTMP += "`r`n"
+            }
+            return $textServerStorageTMP
         }
-        return $textServerSharesTMP
+
+        $global:ServerSharesJob = Start-Job -ArgumentList $serverListBox.SelectedValue -Name ServerShares -ScriptBlock  {
+            param($servertmpval)
+            $textServerSharesTMP = "Share Names: `r`n"
+            foreach($Lshare in get-WmiObject -class Win32_Share -computer $servertmpval){
+                $textServerSharesTMP += ($Lshare).Name
+                #$textServerSharesTMP += "      "
+                #$textServerSharesTMP += ($Lshare).Path
+                $textServerSharesTMP += "`r`n"
+            }
+            return $textServerSharesTMP
+        }
+
+        $textServerName.text = "Computer Name: " + $serverListBox.SelectedValue
+        $textServerStorage.Text = "Loading..."
+        $textServerIP.Text = "Loading..."
+        $textServerShares.Text = "Loading..."
     }
-
-    $textServerName.text = "Computer Name: " + $serverListBox.SelectedValue
-    $textServerStorage.Text = "Loading..."
-    $textServerIP.Text = "Loading..."
-    $textServerShares.Text = "Loading..."
-
 })
 
 $timer = New-Object System.Windows.Forms.Timer
@@ -611,7 +642,7 @@ if ($true){
     $controlButton = New-Object System.Windows.Forms.Button;
     $controlButton.Text = "Control";
     $controlButton.AutoSize = $true;
-    $controlButton.Location = New-Object System.Drawing.Point(55,330);
+    $controlButton.Location = New-Object System.Drawing.Point(25,330);
     $form.Controls.Add($controlButton);
     
     $ViewshButton.Add_Click({
