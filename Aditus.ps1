@@ -1,6 +1,6 @@
 #Aditus
 
-$ProgramVersionNumber = "2.0.5"
+$ProgramVersionNumber = "2.0.6"
 $ErrorActionPreference = 'SilentlyContinue'
 
 # Import the System.Windows.Forms assembly
@@ -630,16 +630,16 @@ $connectButton.Add_Click({
 if ($true){
     $Global:UID = $UQuery[0].id
     
-    $rdpbutton.visible = $fasle
-    $connectButton.Visible = $fasle
+    $rdpbutton.visible = $false
+    $connectButton.Visible = $false
 
-    $ViewshButton = New-Object System.Windows.Forms.Button;
+    $global:ViewshButton = New-Object System.Windows.Forms.Button;
     $ViewshButton.Text = "View";
     $ViewshButton.AutoSize = $true;
     $ViewshButton.Location = New-Object System.Drawing.Point(135,330);
     $form.Controls.Add($ViewshButton);
     
-    $controlButton = New-Object System.Windows.Forms.Button;
+    $global:controlButton = New-Object System.Windows.Forms.Button;
     $controlButton.Text = "Control";
     $controlButton.AutoSize = $true;
     $controlButton.Location = New-Object System.Drawing.Point(25,330);
