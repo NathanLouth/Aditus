@@ -1,7 +1,7 @@
 #Aditus
 
-$ProgramVersionNumber = "2.0.1"
-$ErrorActionPreference = 'SilentlyContinue'
+$ProgramVersionNumber = "2.0.4"
+$ErrorActionPreference = 'Continue'
 
 # Import the System.Windows.Forms assembly
 Add-Type -AssemblyName System.Windows.Forms
@@ -599,7 +599,7 @@ $timer.add_tick({
 $timer.start()
 
 # Create a button to RDP to the selected server
-$rdpButton = New-Object System.Windows.Forms.Button
+$global:rdpButton = New-Object System.Windows.Forms.Button
 $rdpButton.Text = "RDP"
 $rdpButton.AutoSize = $true
 $rdpButton.Location = New-Object System.Drawing.Point(25,328)
@@ -617,7 +617,7 @@ $rdpButton.Add_Click({
 })
 
 # Create a button to connect to the selected server
-$connectButton = New-Object System.Windows.Forms.Button
+$global:connectButton = New-Object System.Windows.Forms.Button
 $connectButton.Text = "Shadow"
 $connectButton.AutoSize = $true
 $connectButton.Location = New-Object System.Drawing.Point(135,328)
@@ -647,8 +647,8 @@ if ($true){
     
     $ViewshButton.Add_Click({
         mstsc /v:$ConnectServer /shadow:$UID
-        $ViewshButton.Visible = $fasle
-        $connectButton.Visible = $fasle
+        $ViewshButton.Visible = $false
+        $controlButton.Visible = $false
         $rdpbutton.visible = $true
         $connectButton.Visible = $true
         if(Test-Path $ConfigPath\CloseOnConnection.Conf){
@@ -659,8 +659,8 @@ if ($true){
     
     $controlButton.Add_Click({
         mstsc /v:$ConnectServer /shadow:$UID /Control
-        $ViewshButton.Visible = $fasle
-        $connectButton.Visible = $fasle
+        $ViewshButton.Visible = $false
+        $controlButton.Visible = $false
         $rdpbutton.visible = $true
         $connectButton.Visible = $true     
         if(Test-Path $ConfigPath\CloseOnConnection.Conf){
