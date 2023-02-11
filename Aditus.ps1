@@ -1,6 +1,6 @@
 #Aditus
 
-$ProgramVersionNumber = "2.0.6"
+$ProgramVersionNumber = "2.0.7"
 $ErrorActionPreference = 'SilentlyContinue'
 
 # Import the System.Windows.Forms assembly
@@ -114,7 +114,7 @@ $ViewMenuItem.DropDownItems.Add($ViewCMenuItem)
 
 #Add an event handler to the Import menu item's Click event
 $ViewCMenuItem.Add_Click({
-    if(Test-Path C:\Aditus\ClassicView.Conf){
+    if(Test-Path $ConfigPath\ClassicView.Conf){
     $form.Size = New-Object System.Drawing.Size(550,432)
     $form.minimumsize = New-Object System.Drawing.Size(550,432)
     $form.maximumsize = New-Object System.Drawing.Size(550,432)
