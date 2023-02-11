@@ -1,5 +1,5 @@
 # Aditus - The Gateway To Your Internal Servers
-### Aditus provides a simple interface to RDP or Shadow any server on your network
+### Aditus provides a simple interface to RDP or Shadow any Windows server on your network
 
 ![image](https://github.com/NathanLouth/Aditus/blob/main/Images/AditusAdvancedView.png)
 
